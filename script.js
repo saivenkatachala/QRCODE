@@ -6,9 +6,28 @@ document.getElementById('generate').addEventListener('click', function() {
         document.getElementById('qrcode').innerHTML = '';
 
         // Generate new QR code
-        new QRCode(document.getElementById('qrcode'), text);
+        var qrCode = new QRCode(document.getElementById('qrcode'), text);
+
+        // Show the copy button
+        document.getElementById('copy').style.display = 'block';
     } else {
         alert('Please enter text to generate QR code.');
+    }
+});
+
+document.getElementById('copy').addEventListener('click', function() {
+    var qrCodeCanvas = document.querySelector('#qrcode canvas');
+    if (qrCodeCanvas) {
+        qrCodeCanvas.toBlob(function(blob) {
+            var item = new ClipboardItem({'image/png': blob});
+            navigator.clipboard.write([item]).then(function() {
+                alert('QR Code copied to clipboard!');
+            }, function(error) {
+                console.error('Error copying QR code: ', error);
+            });
+        });
+    } else {
+        alert('No QR code to copy.');
     }
 });
 
